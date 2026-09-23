@@ -1,0 +1,35 @@
+{
+    "name": "stata",
+
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+
+    // Checks ~/.config/stata holds the tarball and license, and lets the
+    // container open windows on the host display.
+    "initializeCommand": ".devcontainer/init-host.sh",
+    "runArgs": [
+        "--network=host"
+    ],
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "SSH_AUTH_SOCK": "/home/vscode/.ssh/agent.sock"
+    },
+    "mounts": [
+        "source=${localEnv:HOME}/.config/stata,target=/opt/stata-host,type=bind,readonly",
+        "source=stata19,target=/usr/local/stata19,type=volume",
+        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
+        "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "kylebarron.stata-enhanced",
+                "mhutchie.git-graph"
+            ]
+        }
+    },
+    "postCreateCommand": ".devcontainer/install-stata.sh"
+}

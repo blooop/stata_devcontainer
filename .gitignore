@@ -1,0 +1,4 @@
+# Proprietary: the installer and license live in ~/.config/stata on the host
+*.tar.gz
+stata.lic
+*.log
