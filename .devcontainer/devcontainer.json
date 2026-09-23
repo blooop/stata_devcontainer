@@ -9,9 +9,6 @@
     // Checks ~/.config/stata holds the tarball and license, and lets the
     // container open windows on the host display.
     "initializeCommand": ".devcontainer/init-host.sh",
-    "runArgs": [
-        "--network=host"
-    ],
     "containerEnv": {
         "DISPLAY": "${localEnv:DISPLAY}",
         "SSH_AUTH_SOCK": "/home/vscode/.ssh/agent.sock"

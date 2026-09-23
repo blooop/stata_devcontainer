@@ -26,12 +26,12 @@ For a one-off expression, a two-line do-file is still the way: `echo 'display 2+
 
 ## From the host
 
-When you are outside the container, run the same command through the devcontainer CLI. The workspace is mounted at `/workspaces/stata_devcontainer`:
+When you are outside the container, send the same command in. It runs in the workspace folder, so the do-file must be in that workspace's clone.
 
-```sh
-devcontainer exec --workspace-folder <path-to-clone> \
-  bash -lc 'cd /workspaces/stata_devcontainer && stata-mp -q -b do analysis.do'
-```
+- devlaunch: `dl blooop/stata_devcontainer -- stata-mp -q -b do analysis.do`
+- devcontainer CLI: `devcontainer exec --workspace-folder <clone> bash -lc 'cd /workspaces/<clone-name> && stata-mp -q -b do analysis.do'`
+
+The workspace path differs by client (devlaunch uses `/workspaces/<workspace-id>`); inside the container, `pwd` in a fresh shell names it.
 
 ## Guardrails
 
