@@ -1,6 +1,6 @@
 # stata_devcontainer
 
-A devcontainer that runs Stata 19 (BE, SE or MP) on Ubuntu 24.04: the console,
+A devcontainer that runs Stata 19 (BE, SE or MP) on Ubuntu 26.04: the console,
 batch mode, and the `xstata` GUI.
 
 This repo contains no Stata files. You bring your own installer and license;
