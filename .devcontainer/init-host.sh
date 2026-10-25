@@ -9,6 +9,9 @@
 set -u
 dir="$HOME/.config/stata"
 mkdir -p "$dir"
+# The base image's devcontainer metadata bind-mounts ~/.claude, and a bind
+# mount with no source stops the container from starting.
+mkdir -p "$HOME/.claude"
 if ! compgen -G "$dir/*.tar.gz" >/dev/null; then
     echo "WARNING: no Stata Linux tarball in $dir (download it from your stata.com account). The container starts without Stata." >&2
 fi
