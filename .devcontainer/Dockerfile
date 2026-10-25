@@ -1,6 +1,9 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
+# The shared base carries pixi, the claude-code feature, the vscode user and a
+# CA bundle without emSign ECC Root CA - G3 (CVE-2026-111943). This file adds
+# only what Stata needs on top of it.
+FROM ghcr.io/blooop/python_template/devcontainer:latest
 
-ARG PIXI_VERSION=v0.65.0
+USER root
 
 # Runtime libraries for Stata. The console binaries still link against the
 # ncurses 5 ABI, which Ubuntu no longer ships, so point the .so.5 names at .so.6.
@@ -14,10 +17,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && ldconfig \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -L -o /usr/local/bin/pixi -fsSL --compressed "https://github.com/prefix-dev/pixi/releases/download/${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
-    && chmod +x /usr/local/bin/pixi \
-    && pixi info
-
 # Stata itself is proprietary and never enters the image. install-stata.sh
 # installs it on first start into the stata19 volume at /usr/local/stata19,
 # from the tarball bind-mounted at /opt/stata-host. These links resolve once
@@ -29,7 +28,5 @@ RUN for b in stata stata-se stata-mp xstata xstata-se xstata-mp; do \
 USER vscode
 WORKDIR /home/vscode
 
-RUN echo 'eval "$(pixi completion -s bash)"' >> /home/vscode/.bashrc \
-    && echo 'export PATH="$HOME/.pixi/bin:$PATH"' >> /home/vscode/.profile \
-    && mkdir -p /home/vscode/.ssh && chmod 700 /home/vscode/.ssh \
-    && mkdir -p /home/vscode/.config/gh
+# devcontainer.json bind-mounts the host's ~/.ssh here.
+RUN mkdir -p /home/vscode/.ssh && chmod 700 /home/vscode/.ssh
