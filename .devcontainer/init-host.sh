@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # Runs on the host before the container starts.
 #
-# It never fails. A missing tarball or license used to exit 1 here, and a
-# failing initializeCommand stops the container before it exists: no shell, no
-# way to look around, and under `dl` only a bare error. Now the directory is
-# created so the bind mount has a source, the missing files are named, and
-# install-stata.sh skips the install until they are there.
+# It never fails: a failing initializeCommand stops the container before it
+# exists, with no shell to look around in. It creates the bind-mount sources and
+# only warns about a missing tarball or license; install-stata.sh skips the
+# install until they are there.
 set -u
 dir="$HOME/.config/stata"
 mkdir -p "$dir"
