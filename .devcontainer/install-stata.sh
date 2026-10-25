@@ -14,8 +14,12 @@ if [ -e "$dest/.installed" ]; then
 else
     tarball=$(find "$src" -maxdepth 1 -name '*.tar.gz' | head -n1)
     if [ -z "$tarball" ]; then
-        echo "ERROR: no Stata *.tar.gz in ~/.config/stata on the host" >&2
-        exit 1
+        # Not a failure: the container is still useful, and failing here would
+        # fail the whole postCreateCommand. Put the files on the host and run
+        # this script again.
+        echo "SKIP: no Stata *.tar.gz in ~/.config/stata on the host; Stata is not installed." >&2
+        echo "      Add the tarball and stata.lic there, then run .devcontainer/install-stata.sh" >&2
+        exit 0
     fi
     echo "Installing Stata from $(basename "$tarball")"
     tmp=$(mktemp -d)
@@ -26,6 +30,10 @@ else
     touch "$dest/.installed"
 fi
 
+if [ ! -f "$src/stata.lic" ]; then
+    echo "SKIP: no stata.lic in ~/.config/stata on the host; cannot run Stata yet." >&2
+    exit 0
+fi
 ln -sf "$src/stata.lic" "$dest/stata.lic"
 
 # Smoke test: which edition runs, and does the license work?
