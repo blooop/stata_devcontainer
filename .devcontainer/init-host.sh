@@ -8,9 +8,13 @@
 set -u
 dir="$HOME/.config/stata"
 mkdir -p "$dir"
-# The base image's devcontainer metadata bind-mounts ~/.claude, and a bind
-# mount with no source stops the container from starting.
-mkdir -p "$HOME/.claude"
+# devcontainer.json bind-mounts ~/.ssh and ~/.config/gh, and the base image's
+# devcontainer metadata bind-mounts ~/.claude. A bind mount with no source
+# stops the container from starting, so create each one on a fresh host.
+mkdir -p "$HOME/.claude" "$HOME/.config/gh"
+if [ ! -d "$HOME/.ssh" ]; then
+    mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+fi
 if ! compgen -G "$dir/*.tar.gz" >/dev/null; then
     echo "WARNING: no Stata Linux tarball in $dir (download it from your stata.com account). The container starts without Stata." >&2
 fi
